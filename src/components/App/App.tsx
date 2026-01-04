@@ -7,6 +7,8 @@ import SearchBar from "../SearchBar/SearchBar"
 import { fetchMovies } from "../../services/movieService"
 import { useState } from "react"
 import type { Movie } from "../../types/movie"
+import toast, { Toaster } from "react-hot-toast"
+
 
 
 
@@ -26,6 +28,11 @@ function App() {
     try {
       const data = await fetchMovies(query);
       setMovies(data)
+
+      if (query && data.length === 0) {
+        toast.error("No movies found for your request.")
+      }
+
     } catch {
       setError(true);
     } finally {
@@ -34,6 +41,7 @@ function App() {
 }
     return (
       <div className={styles.app}>
+        <Toaster />
         <SearchBar onSubmit={handleSearch} />
         {loading ? <Loader /> : null}
         {error ? <ErrorMessage /> : null}

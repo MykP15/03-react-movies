@@ -1,6 +1,5 @@
-import { useState } from "react";
 import styles from "./SearchBar.module.css";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 
 
@@ -9,21 +8,18 @@ interface SearchBarProps {
 }
 
 function SearchBar( { onSubmit } : SearchBarProps) {
-  const [isEmpty, setIsEmpty] = useState<boolean>(false)
 
 
   const handleSubmit = (formData: FormData) => {
     const query = formData.get("query") as string
-    onSubmit(query)
+    onSubmit(query.trim())
 
     if (query.trim() === "") {
-      setIsEmpty(true)
-    } else {
-      setIsEmpty(false)
-    }
+      toast.error('Please enter your search query.');
+
+    } 
 }
 
-  const notify = () => toast.error('Please enter your search query.');
   
   return (
     <>
@@ -46,13 +42,12 @@ function SearchBar( { onSubmit } : SearchBarProps) {
               placeholder="Search movies..."
               autoFocus
             />
-            <button onClick={notify} className={styles.button} type="submit">
+            <button className={styles.button} type="submit">
               Search
             </button>
           </form>
         </div>
       </header>
-      {isEmpty ? <Toaster /> : null}
     </>
   );
 }
